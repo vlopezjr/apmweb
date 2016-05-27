@@ -104,8 +104,9 @@ import { Vote, Issue } from '../app/Issue';
 })
 export class AppComponent implements OnInit {
     title = 'Change Orders';
-    index:number = 0;
-    issue = ISSUES[this.index];
+    index: number = 0;
+    openIssues: Issue[] = [];
+    issue: Issue;
     user = "Harold";
     alreadyVoted = false;
     showReasonInputBox = false;
@@ -113,6 +114,12 @@ export class AppComponent implements OnInit {
     remaining = 0;
 
     ngOnInit() {
+
+        this.getOpenIssues();
+
+        this.issue = this.openIssues[this.index];
+        //console.log(this.openIssues.length);
+
         this.checkIfVoted();
 
         //this.alreadyVoted = false;
@@ -123,18 +130,18 @@ export class AppComponent implements OnInit {
         //        this.alreadyVoted = true;
         //    }
         //}
-        this.remaining = ISSUES.length;
+        this.remaining = this.openIssues.length;
     }
 
     onNextIssueClick() {
         this.index++;
 
-        if (this.index === ISSUES.length) {
+        if (this.index === this.openIssues.length) {
             this.index = 0;
         }
 
         //this.alreadyVoted = false;
-        this.issue = ISSUES[this.index];
+        this.issue = this.openIssues[this.index];
         this.checkIfVoted();
         //for (var n = 0; n < this.issue.votes.length; n++) {
         //    //console.log(this.issue.votes[n].user + " === " + this.user);
@@ -149,11 +156,11 @@ export class AppComponent implements OnInit {
         this.index--;
 
         if (this.index === 0) {
-            this.index = ISSUES.length - 1;
+            this.index = this.openIssues.length - 1;
         }
 
         //this.alreadyVoted = false;
-        this.issue = ISSUES[this.index];
+        this.issue = this.openIssues[this.index];
         //for (var n = 0; n < this.issue.votes.length; n++) {
         //    //console.log(this.issue.votes[n].user + " === " + this.user);
         //    //console.log(this.issue.votes[n].voteType + " !=== ''");
@@ -194,6 +201,17 @@ export class AppComponent implements OnInit {
         this.skipped++;
         this.onNextIssueClick();
     }
+
+    getOpenIssues() {
+        for (var i = 0; i < ISSUES.length; i++) {
+            for (var j = 0; j < ISSUES[i].votes.length; j++) {
+                if (ISSUES[i].votes[j].voteType === "") {
+                    this.openIssues.push(ISSUES[i]);
+                    break;
+                }
+            }
+        }
+    }
 }
 
 var ISSUES: Issue[] = [
@@ -205,7 +223,7 @@ var ISSUES: Issue[] = [
         "changeType": "add",
         "originator": "harold",
         "votes": [
-            { "voteKey": 1, "user": "Harold", "voteType": "", "reason": "" },
+            { "voteKey": 1, "user": "Harold", "voteType": "approve", "reason": "" },
             { "voteKey": 2, "user": "Bob", "voteType": "approve", "reason": "" },
             { "voteKey": 3, "user": "Joanna", "voteType": "approve", "reason": "" },
             { "voteKey": 4, "user": "Rick", "voteType": "approve", "reason": "" },
@@ -220,7 +238,7 @@ var ISSUES: Issue[] = [
         "changeType": "change",
         "originator": "harold",
         "votes": [
-            { "voteKey": 6, "user": "Harold", "voteType": "", "reason": "" },
+            { "voteKey": 6, "user": "Harold", "voteType": "reject", "reason": "" },
             { "voteKey": 7, "user": "Bob", "voteType": "reject", "reason": "does not exist" },
             { "voteKey": 8, "user": "Joanna", "voteType": "approve", "reason": "" },
             { "voteKey": 9, "user": "Rick", "voteType": "approve", "reason": "" },
@@ -228,7 +246,7 @@ var ISSUES: Issue[] = [
         ]
     },
     {
-        "changeOrderKey": 2,
+        "changeOrderKey": 3,
         "partNumber": "171",
         "description": "171 long description",
         "pageNumber": "2",
@@ -240,6 +258,36 @@ var ISSUES: Issue[] = [
             { "voteKey": 13, "user": "Joanna", "voteType": "approve", "reason": "" },
             { "voteKey": 14, "user": "Rick", "voteType": "reject", "reason": "wrong vendor" },
             { "voteKey": 15, "user": "Andy", "voteType": "approve", "reason": "" }
+        ]
+    },
+    {
+        "changeOrderKey": 4,
+        "partNumber": "171",
+        "description": "171 long description",
+        "pageNumber": "2",
+        "changeType": "delete",
+        "originator": "harold",
+        "votes": [
+            { "voteKey": 16, "user": "Harold", "voteType": "", "reason": "" },
+            { "voteKey": 17, "user": "Bob", "voteType": "approve", "reason": "" },
+            { "voteKey": 18, "user": "Joanna", "voteType": "approve", "reason": "" },
+            { "voteKey": 19, "user": "Rick", "voteType": "reject", "reason": "wrong vendor" },
+            { "voteKey": 20, "user": "Andy", "voteType": "approve", "reason": "" }
+        ]
+    }    ,
+    {
+        "changeOrderKey": 5,
+        "partNumber": "171",
+        "description": "171 long description",
+        "pageNumber": "2",
+        "changeType": "delete",
+        "originator": "harold",
+        "votes": [
+            { "voteKey": 21, "user": "Harold", "voteType": "approve", "reason": "" },
+            { "voteKey": 22, "user": "Bob", "voteType": "approve", "reason": "" },
+            { "voteKey": 23, "user": "Joanna", "voteType": "approve", "reason": "" },
+            { "voteKey": 24, "user": "Rick", "voteType": "reject", "reason": "wrong vendor" },
+            { "voteKey": 25, "user": "Andy", "voteType": "approve", "reason": "" }
         ]
     }
 ];
