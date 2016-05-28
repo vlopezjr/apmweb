@@ -1,4 +1,4 @@
-System.register(['@angular/core'], function(exports_1, context_1) {
+System.register(['@angular/core', './issue-detail.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,83 +10,66 @@ System.register(['@angular/core'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, issue_detail_component_1;
     var AppComponent, ISSUES;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (issue_detail_component_1_1) {
+                issue_detail_component_1 = issue_detail_component_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
                 function AppComponent() {
                     this.title = 'Change Orders';
-                    this.index = 0;
                     this.openIssues = [];
                     this.user = "Harold";
                     this.alreadyVoted = false;
                     this.showReasonInputBox = false;
                     this.skipped = 0;
                     this.remaining = 0;
+                    this.finished = false;
                 }
                 AppComponent.prototype.ngOnInit = function () {
                     this.getOpenIssues();
-                    this.issue = this.openIssues[this.index];
-                    //console.log(this.openIssues.length);
+                    this.index = 0;
+                    this.currentIssue = this.openIssues[this.index];
                     this.checkIfVoted();
-                    //this.alreadyVoted = false;
-                    //for (var n = 0; n < this.issue.votes.length; n++) {
-                    //    //console.log(this.issue.votes[n].user + " === " + this.user);
-                    //    //console.log(this.issue.votes[n].voteType + " !=== ''");
-                    //    if (this.issue.votes[n].user === this.user && this.issue.votes[n].voteType!=="") {
-                    //        this.alreadyVoted = true;
-                    //    }
-                    //}
                     this.remaining = this.openIssues.length;
                 };
                 AppComponent.prototype.onNextIssueClick = function () {
                     this.index++;
                     if (this.index === this.openIssues.length) {
-                        this.index = 0;
+                        this.finished = true;
                     }
-                    //this.alreadyVoted = false;
-                    this.issue = this.openIssues[this.index];
+                    this.currentIssue = this.openIssues[this.index];
                     this.checkIfVoted();
-                    //for (var n = 0; n < this.issue.votes.length; n++) {
-                    //    //console.log(this.issue.votes[n].user + " === " + this.user);
-                    //    //console.log(this.issue.votes[n].voteType + " !=== ''");
-                    //    if (this.issue.votes[n].user === this.user) {
-                    //        this.alreadyVoted = true;
-                    //    }
-                    //}
                 };
                 AppComponent.prototype.onPrevIssueClick = function () {
                     this.index--;
                     if (this.index === 0) {
                         this.index = this.openIssues.length - 1;
                     }
-                    //this.alreadyVoted = false;
-                    this.issue = this.openIssues[this.index];
-                    //for (var n = 0; n < this.issue.votes.length; n++) {
-                    //    //console.log(this.issue.votes[n].user + " === " + this.user);
-                    //    //console.log(this.issue.votes[n].voteType + " !=== ''");
-                    //    if (this.issue.votes[n].user === this.user) {
-                    //        this.alreadyVoted = true;
-                    //    }
-                    //}
+                    this.currentIssue = this.openIssues[this.index];
                     this.checkIfVoted();
                 };
                 AppComponent.prototype.checkIfVoted = function () {
                     this.alreadyVoted = false;
                     this.showReasonInputBox = false;
-                    for (var n = 0; n < this.issue.votes.length; n++) {
-                        if (this.issue.votes[n].user === this.user && this.issue.votes[n].voteType !== "") {
+                    for (var n = 0; n < this.currentIssue.votes.length; n++) {
+                        if (this.currentIssue.votes[n].user === this.user && this.currentIssue.votes[n].voteType !== "") {
                             this.alreadyVoted = true;
                         }
                     }
                 };
                 AppComponent.prototype.showReasonInput = function () {
                     this.showReasonInputBox = true;
+                };
+                AppComponent.prototype.cancelReasonInput = function () {
+                    this.showReasonInputBox = false;
+                    return false;
                 };
                 AppComponent.prototype.approve = function () {
                     this.remaining--;
@@ -113,8 +96,9 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'co-issue',
-                        template: "<h1>{{title}}</h1>\n                <div class=\"container-fluid\">\n                    <div class=\"panel panel-primary\">\n                        <div class=\"panel-heading text-center\">\n                            <a href=\"#\" class=\"pull-left\" style=\"color: white;font-size: 14px;\">Skipped <span class=\"badge\">{{skipped}}</span></a>\n                            <span class=\"text-centered\" >{{issue.partNumber | uppercase}}</span>                            \n                            <a href=\"#\" class=\"pull-right\" style=\"color: white; font-size: 14px;\">Remaining <span class=\"badge\">{{remaining}}</span></a>                          \n                        </div>\n                        <div class=\"panel-body\">\n                                <div class=\"text-warning\">Description:</div>\n                                <div>\n                                    <span style=\"padding-left: 30px;\">{{issue.description}}</span>                                  \n                                </div>\n                                \n                                <div *ngIf=\"!alreadyVoted\">\n                                    <p>&nbsp;</p>\n                                    <div class=\"text-warning\">Vote:</div>\n                                    <div>\n                                        <span style=\"padding: 30px;\" (click)=\"approve()\">APPROVE <span class=\"glyphicon glyphicon-ok\" style=\"color: green;\"></span></span>                    \n                                        <span style=\"padding: 30px;\" (click)=\"showReasonInput()\">REJECT <span class=\"glyphicon glyphicon-remove\" style=\"color: red;\"></span></span>\n                                        <span style=\"padding: 30px;\">SKIP <span class=\"glyphicon glyphicon-step-forward\" style=\"color: blue;\" (click)=\"skip()\"></span></span>\n                                        <span *ngIf=\"showReasonInputBox\">Reason For Rejecting: <input type=\"text\" id=\"rejectReason\"/><button class=\"btn btn-sm btn-primary\" (click)=\"reject()\">Vote</button></span>\n                                    </div> \n                                </div>\n\n                                <p>&nbsp;</p>\n                                <table class=\"table\">\n                                    <tr><th style=\"width: 20%\">User</th><th style=\"width: 20%\">Vote</th><th>Reason</th></tr>\n                                    <tr *ngFor=\"let vote of issue.votes\">\n                                        <td>{{vote.user}}</td>\n                                        <td>\n                                            <span class=\"glyphicon glyphicon-ok\" style=\"color: green;\" *ngIf=\"vote.voteType==='approve'\"></span>\n                                            <span class=\"glyphicon glyphicon-remove\" style=\"color: red;\" *ngIf=\"vote.voteType==='reject'\"></span>\n                                        </td>\n                                        <td>{{vote.reason}}</td>\n                                    </tr>\n                                </table>    \n                        </div>\n\n                            \n\n                    </div>\n               </div>              \n\n   \n                   \n                         \n               ",
-                        styles: ["\n  .selected {\n    background-color: #CFD8DC !important;\n    color: white;\n  }\n  .heroes {\n    margin: 0 0 2em 0;\n    list-style-type: none;\n    padding: 0;\n    width: 15em;\n  }\n  .heroes li {\n    cursor: pointer;\n    position: relative;\n    left: 0;\n    background-color: #EEE;\n    margin: .5em;\n    padding: .3em 0;\n    height: 1.6em;\n    border-radius: 4px;\n  }\n  .heroes li.selected:hover {\n    background-color: #BBD8DC !important;\n    color: white;\n  }\n  .heroes li:hover {\n    color: #607D8B;\n    background-color: #DDD;\n    left: .1em;\n  }\n  .heroes .text {\n    position: relative;\n    top: -3px;\n  }\n  .heroes .badge {\n    display: inline-block;\n    font-size: small;\n    color: white;\n    padding: 0.8em 0.7em 0 0.7em;\n    background-color: #607D8B;\n    line-height: 1em;\n    position: relative;\n    left: -1px;\n    top: -4px;\n    height: 1.8em;\n    margin-right: .8em;\n    border-radius: 4px 0 0 4px;\n  }\n"]
+                        templateUrl: '../app/app.component.html',
+                        styles: ['app.component.css'],
+                        directives: [issue_detail_component_1.IssueDetailComponent]
                     }), 
                     __metadata('design:paramtypes', [])
                 ], AppComponent);
@@ -169,9 +153,9 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 },
                 {
                     "changeOrderKey": 4,
-                    "partNumber": "171",
-                    "description": "171 long description",
-                    "pageNumber": "2",
+                    "partNumber": "172",
+                    "description": "172 long description",
+                    "pageNumber": "3",
                     "changeType": "delete",
                     "originator": "harold",
                     "votes": [
@@ -184,9 +168,9 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 },
                 {
                     "changeOrderKey": 5,
-                    "partNumber": "171",
-                    "description": "171 long description",
-                    "pageNumber": "2",
+                    "partNumber": "173",
+                    "description": "173 long description",
+                    "pageNumber": "3",
                     "changeType": "delete",
                     "originator": "harold",
                     "votes": [

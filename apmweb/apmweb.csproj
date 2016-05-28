@@ -68,6 +68,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\app.component.html" />
     <Content Include="packages.config" />
     <Content Include="api\products\products.json" />
     <Content Include="package.json" />
@@ -92,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\app.component.ts" />
+    <TypeScriptCompile Include="app\issue-detail.component.ts" />
     <TypeScriptCompile Include="app\issue.ts" />
     <TypeScriptCompile Include="app\main.ts" />
   </ItemGroup>

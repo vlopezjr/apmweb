@@ -1,135 +1,30 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Vote, Issue } from '../app/Issue';
+import { Vote, Issue } from './issue';
+import { IssueDetailComponent } from './issue-detail.component';
 
 @Component({
     selector: 'co-issue',
-    template: `<h1>{{title}}</h1>
-                <div class="container-fluid">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading text-center">
-                            <a href="#" class="pull-left" style="color: white;font-size: 14px;">Skipped <span class="badge">{{skipped}}</span></a>
-                            <span class="text-centered" >{{issue.partNumber | uppercase}}</span>                            
-                            <a href="#" class="pull-right" style="color: white; font-size: 14px;">Remaining <span class="badge">{{remaining}}</span></a>                          
-                        </div>
-                        <div class="panel-body">
-                                <div class="text-warning">Description:</div>
-                                <div>
-                                    <span style="padding-left: 30px;">{{issue.description}}</span>                                  
-                                </div>
-                                
-                                <div *ngIf="!alreadyVoted">
-                                    <p>&nbsp;</p>
-                                    <div class="text-warning">Vote:</div>
-                                    <div>
-                                        <span style="padding: 30px;" (click)="approve()">APPROVE <span class="glyphicon glyphicon-ok" style="color: green;"></span></span>                    
-                                        <span style="padding: 30px;" (click)="showReasonInput()">REJECT <span class="glyphicon glyphicon-remove" style="color: red;"></span></span>
-                                        <span style="padding: 30px;">SKIP <span class="glyphicon glyphicon-step-forward" style="color: blue;" (click)="skip()"></span></span>
-                                        <span *ngIf="showReasonInputBox">Reason For Rejecting: <input type="text" id="rejectReason"/><button class="btn btn-sm btn-primary" (click)="reject()">Vote</button></span>
-                                    </div> 
-                                </div>
-
-                                <p>&nbsp;</p>
-                                <table class="table">
-                                    <tr><th style="width: 20%">User</th><th style="width: 20%">Vote</th><th>Reason</th></tr>
-                                    <tr *ngFor="let vote of issue.votes">
-                                        <td>{{vote.user}}</td>
-                                        <td>
-                                            <span class="glyphicon glyphicon-ok" style="color: green;" *ngIf="vote.voteType==='approve'"></span>
-                                            <span class="glyphicon glyphicon-remove" style="color: red;" *ngIf="vote.voteType==='reject'"></span>
-                                        </td>
-                                        <td>{{vote.reason}}</td>
-                                    </tr>
-                                </table>    
-                        </div>
-
-                            
-
-                    </div>
-               </div>              
-
-   
-                   
-                         
-               `,
-    styles: [`
-  .selected {
-    background-color: #CFD8DC !important;
-    color: white;
-  }
-  .heroes {
-    margin: 0 0 2em 0;
-    list-style-type: none;
-    padding: 0;
-    width: 15em;
-  }
-  .heroes li {
-    cursor: pointer;
-    position: relative;
-    left: 0;
-    background-color: #EEE;
-    margin: .5em;
-    padding: .3em 0;
-    height: 1.6em;
-    border-radius: 4px;
-  }
-  .heroes li.selected:hover {
-    background-color: #BBD8DC !important;
-    color: white;
-  }
-  .heroes li:hover {
-    color: #607D8B;
-    background-color: #DDD;
-    left: .1em;
-  }
-  .heroes .text {
-    position: relative;
-    top: -3px;
-  }
-  .heroes .badge {
-    display: inline-block;
-    font-size: small;
-    color: white;
-    padding: 0.8em 0.7em 0 0.7em;
-    background-color: #607D8B;
-    line-height: 1em;
-    position: relative;
-    left: -1px;
-    top: -4px;
-    height: 1.8em;
-    margin-right: .8em;
-    border-radius: 4px 0 0 4px;
-  }
-`]
-
+    templateUrl: '../app/app.component.html',
+    styles: ['app.component.css'],
+    directives: [IssueDetailComponent]
 })
 export class AppComponent implements OnInit {
     title = 'Change Orders';
-    index: number = 0;
+    index: number;
     openIssues: Issue[] = [];
-    issue: Issue;
+    currentIssue: Issue;
     user = "Harold";
     alreadyVoted = false;
     showReasonInputBox = false;
     skipped = 0;
     remaining = 0;
+    finished = false;
 
     ngOnInit() {
-
         this.getOpenIssues();
-
-        this.issue = this.openIssues[this.index];
-        //console.log(this.openIssues.length);
-
-        this.checkIfVoted();
-
-        //this.alreadyVoted = false;
-        //for (var n = 0; n < this.issue.votes.length; n++) {
-        //    //console.log(this.issue.votes[n].user + " === " + this.user);
-        //    //console.log(this.issue.votes[n].voteType + " !=== ''");
-        //    if (this.issue.votes[n].user === this.user && this.issue.votes[n].voteType!=="") {
-        //        this.alreadyVoted = true;
-        //    }
-        //}
+        this.index = 0;
+        this.currentIssue = this.openIssues[this.index];     
+        this.checkIfVoted();      
         this.remaining = this.openIssues.length;
     }
 
@@ -137,19 +32,11 @@ export class AppComponent implements OnInit {
         this.index++;
 
         if (this.index === this.openIssues.length) {
-            this.index = 0;
+            this.finished = true;
         }
-
-        //this.alreadyVoted = false;
-        this.issue = this.openIssues[this.index];
-        this.checkIfVoted();
-        //for (var n = 0; n < this.issue.votes.length; n++) {
-        //    //console.log(this.issue.votes[n].user + " === " + this.user);
-        //    //console.log(this.issue.votes[n].voteType + " !=== ''");
-        //    if (this.issue.votes[n].user === this.user) {
-        //        this.alreadyVoted = true;
-        //    }
-        //}
+       
+        this.currentIssue = this.openIssues[this.index];
+        this.checkIfVoted();     
     }
 
     onPrevIssueClick() {
@@ -158,17 +45,9 @@ export class AppComponent implements OnInit {
         if (this.index === 0) {
             this.index = this.openIssues.length - 1;
         }
-
-        //this.alreadyVoted = false;
-        this.issue = this.openIssues[this.index];
-        //for (var n = 0; n < this.issue.votes.length; n++) {
-        //    //console.log(this.issue.votes[n].user + " === " + this.user);
-        //    //console.log(this.issue.votes[n].voteType + " !=== ''");
-        //    if (this.issue.votes[n].user === this.user) {
-        //        this.alreadyVoted = true;
-        //    }
-        //}
-
+       
+        this.currentIssue = this.openIssues[this.index];
+      
         this.checkIfVoted();
     }
 
@@ -176,8 +55,8 @@ export class AppComponent implements OnInit {
         this.alreadyVoted = false;
         this.showReasonInputBox = false;
 
-        for (var n = 0; n < this.issue.votes.length; n++) {            
-            if (this.issue.votes[n].user === this.user && this.issue.votes[n].voteType !== "") {
+        for (var n = 0; n < this.currentIssue.votes.length; n++) {            
+            if (this.currentIssue.votes[n].user === this.user && this.currentIssue.votes[n].voteType !== "") {
                 this.alreadyVoted = true;
             }
         }        
@@ -185,6 +64,11 @@ export class AppComponent implements OnInit {
     
     showReasonInput() {
         this.showReasonInputBox = true;
+    }
+
+    cancelReasonInput() {
+        this.showReasonInputBox = false;
+        return false;
     }
 
     approve() {
@@ -262,9 +146,9 @@ var ISSUES: Issue[] = [
     },
     {
         "changeOrderKey": 4,
-        "partNumber": "171",
-        "description": "171 long description",
-        "pageNumber": "2",
+        "partNumber": "172",
+        "description": "172 long description",
+        "pageNumber": "3",
         "changeType": "delete",
         "originator": "harold",
         "votes": [
@@ -277,9 +161,9 @@ var ISSUES: Issue[] = [
     }    ,
     {
         "changeOrderKey": 5,
-        "partNumber": "171",
-        "description": "171 long description",
-        "pageNumber": "2",
+        "partNumber": "173",
+        "description": "173 long description",
+        "pageNumber": "3",
         "changeType": "delete",
         "originator": "harold",
         "votes": [

@@ -1,0 +1,29 @@
+﻿<h1>{{title}}</h1>
+<div class="container-fluid">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <a href="#" class="pull-left" style="color: white;font-size: 14px;">Skipped <span class="badge">{{skipped}}</span></a>
+            <span class="text-centered">{{currentIssue.partNumber | uppercase}}</span>
+            <a href="#" class="pull-right" style="color: white; font-size: 14px;">Remaining <span class="badge">{{remaining}}</span></a>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-md-10"><span class="text-warning">Description: </span>{{currentIssue.description}}</div>
+                <div class="col-md-2"><span class="text-warning">Catalog Page: </span>{{currentIssue.pageNumber}}</div>
+            </div>
+
+            <p>&nbsp;</p>
+
+            <div *ngIf="finished">
+                <p>&nbsp;</p>
+                <span class="text-success">You have reached the end of the list.  Hit the Refresh button to get any new issues.</span>
+            </div>
+            <h2>DETAILS</h2>
+            <issue-detail [issue]="currentIssue"></issue-detail>
+        </div>
+
+
+
+    </div>
+</div>
