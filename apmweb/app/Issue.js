@@ -20,4 +20,4 @@ System.register([], function(exports_1, context_1) {
         }
     }
 });
-//# sourceMappingURL=Issue.js.map
+//# sourceMappingURL=issue.js.map

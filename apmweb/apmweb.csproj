@@ -75,6 +75,7 @@
     <Content Include="systemjs.config.js" />
     <Content Include="typings.json" />
     <Content Include="tsconfig.json" />
+    <Content Include="app\mock-issues.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -94,8 +95,10 @@
   <ItemGroup>
     <TypeScriptCompile Include="app\app.component.ts" />
     <TypeScriptCompile Include="app\issue-detail.component.ts" />
+    <TypeScriptCompile Include="app\issue.service.ts" />
     <TypeScriptCompile Include="app\issue.ts" />
     <TypeScriptCompile Include="app\main.ts" />
+    <TypeScriptCompile Include="app\mock-issues.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
